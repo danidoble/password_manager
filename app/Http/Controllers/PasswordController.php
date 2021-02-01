@@ -13,11 +13,11 @@ class PasswordController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\Response
      */
     public function index()
     {
-        //
+        return view('dashboard');
     }
 
     /**
@@ -38,64 +38,36 @@ class PasswordController extends Controller
      */
     public function store(Request $request)
     {
-        $this->validate($request,[
-            'site_name' => ['required','string','min:2'],
-            'username' => ['sometimes','string','min:2'],
-            'password' => ['required','string','min:4']
-        ]);
 
-        $k1 = Keys::where('type',1)->orderBy(DB::raw('rand()'))->first();
-        $k2 = Keys::where('type',2)->orderBy(DB::raw('rand()'))->first();
-
-        $encrypted = CryptController::crypt($request->input('password'),$k1->key_data,$k2->key_data);
-
-        $username = null;
-        if($request->has('username')){
-            $username = $request->input('username');
-        }
-        $url = null;
-        if($request->has('url')){
-            $url = $request->input('url');
-        }
-
-        $old_password = Password::where('user_id',Auth::user()->getAuthIdentifier())
-            ->where('site_name','=',$request->input('site_name'))
-            ->where('username',$username)
-            ->where('url',$url)
-            ->first();
-        if(!empty($old_password)){
-            $old_password->delete();
-        }
-
-        $password = new Password();
-        $password->site_name = $request->input('site_name');
-        $password->password = $encrypted;
-        $password->user_id = Auth::User()->getAuthIdentifier();
-        $password->key_one_id = $k1->id;
-        $password->key_two_id = $k2->id;
-
-        if($request->has('username')){
-            $password->username = $username;
-        }
-        if($request->has('url')){
-            $password->url = $url;
-        }
-
-
-        $password->save();
-        return response('ok',201);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Password  $password
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Password $password)
+
+    public function show($id)
     {
-        //
+        $password = Password::where('user_id',Auth::user()->getAuthIdentifier())->findOrFail($id);
+        $old_passwords = Password::where('user_id',Auth::user()->getAuthIdentifier())
+            ->where('id','<>',$password->id)
+            ->where('site_name',$password->site_name)
+            ->where('username',$password->username)
+            ->where('url',$password->url)
+            ->withTrashed()
+            ->get();
+        return view('passwords.show',[
+            'password'=>$password,
+            'old_passwords'=>$old_passwords,
+            ]);
     }
+    public function site_name($site_name)
+    {
+        $passwords = Password::where('user_id',Auth::user()->getAuthIdentifier())
+            ->where('site_name',$site_name)
+            ->get();
+
+        return view('passwords.show_users',[
+            'passwords'=>$passwords,
+            ]);
+    }
+
 
     /**
      * Show the form for editing the specified resource.

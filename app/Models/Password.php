@@ -16,8 +16,12 @@ class Password extends Model
      * @var array
      */
     protected $fillable = [
-        'name',
-        'email',
+        'site_name',
+        'url',
+        'username',
+        'user_id',
+        'key_one_id',
+        'key_two_id',
         'password',
     ];
 
@@ -38,6 +42,9 @@ class Password extends Model
     protected $casts = [
 
     ];
+    /**
+     * @var mixed|null
+     */
 
     public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
@@ -48,5 +55,18 @@ class Password extends Model
     {
         return $this->belongsTo(User::class,'id','user_id')->withTrashed();
     }
+
+    public function keyOne(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(Keys::class,'id','key_one_id')->withTrashed();
+    }
+
+    public function keyTwo(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(Keys::class,'id','key_two_id')->withTrashed();
+    }
+
+
+
 
 }

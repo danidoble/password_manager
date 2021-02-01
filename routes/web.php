@@ -17,6 +17,14 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
-    return view('dashboard');
-})->name('dashboard');
+Route::middleware(['auth:sanctum', 'verified'])->group(function () {
+    Route::get('/dashboard', function () {
+        return view('dashboard');
+    })->name('dashboard');
+
+    Route::prefix('admin/password')->group(function(){
+        Route::get('show/site/{site_name}',[\App\Http\Controllers\PasswordController::class,'site_name'])->name('admin.password.site_name');
+        Route::get('show/id/{id}',[\App\Http\Controllers\PasswordController::class,'show'])->name('admin.password.id');
+    });
+});
+
