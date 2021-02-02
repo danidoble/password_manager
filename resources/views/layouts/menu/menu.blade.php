@@ -35,8 +35,8 @@
                                 </svg>
                             </button>
                         </div>
-                        <div class="flex-shrink-0 flex items-center px-4">
-                            <span class="h-8 w-auto text-xl font-bold">Password Manager</span>
+                        <div class="flex-shrink-0 flex items-center px-4 text-center">
+                            <span class="h-8 w-full text-normal font-light">{{ __('Password manager') }}</span>
                         </div>
                         <div class="mt-5 flex-1 h-0 overflow-y-auto">
                             <nav class="px-2">
@@ -53,8 +53,8 @@
             <!-- Static sidebar for desktop -->
             <div class="hidden lg:flex lg:flex-shrink-0">
                 <div class="flex flex-col w-64 border-r border-gray-200 pt-5 pb-4 bg-gray-100">
-                    <div class="flex items-center flex-shrink-0 px-6">
-                        <span class="h-8 w-auto text-xl font-bold">Password Manager</span>
+                    <div class="flex items-center flex-shrink-0 px-1 text-center">
+                        <span class="h-8 w-full text-normal font-light">{{ __('Password manager') }}</span>
                     </div>
                     <!-- Sidebar component, swap this element with another sidebar if you like -->
                     <div class="h-0 flex-1 flex flex-col overflow-y-auto">
@@ -114,7 +114,7 @@
                                 </div>
                                 <input type="text" name="search" id="search"
                                        class="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-9 sm:text-sm border-gray-300 rounded-md"
-                                       placeholder="Search">
+                                       placeholder="{{ __('Search') }}">
                             </div>
                         </div>
                         <!-- Navigation -->
